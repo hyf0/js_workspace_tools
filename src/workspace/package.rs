@@ -22,27 +22,20 @@ pub fn get_package_infos(cwd: &str) -> PackageInfos {
         .collect()
 }
 
-
-pub fn search_package_json_files<T: AsRef<str>>(workspaces_root: &str, glob_pats: &[T]) -> Vec<String> {
-  glob_pats
-      .into_iter()
-      .map(|t| t.as_ref())
-      .flat_map(|pat| {
-          let pattern = path::join!(pat, "package.json").replace("\\", "/");
-          // TODO: better perf
-          globby::synced::globby_with(
-              workspaces_root,
-              &[pattern],
-              &[
-                  "**/node_modules/**".to_string(),
-                  "**/.git".to_string(),
-                  "**/.next".to_string(),
-                  "**/.turbo".to_string(),
-              ],
-          )
-          .into_iter()
-          .map(|p| path::dirname(&p))
-      })
-      .map(|p| path::join!(&p))
-      .collect()
+pub fn search_package_json_files<T: AsRef<str>>(
+    workspaces_root: &str,
+    glob_pats: &[T],
+) -> Vec<String> {
+    glob_pats
+        .into_iter()
+        .map(|t| t.as_ref())
+        .flat_map(|pat| {
+            let pattern = path::join!(workspaces_root, pat, "package.json").replace("\\", "/");
+            glob::glob(&pattern)
+                .unwrap()
+                .into_iter()
+                .map(|p| path::dirname(&p.unwrap().to_string_lossy().to_string()))
+        })
+        .map(|p| path::join!(&p))
+        .collect()
 }
