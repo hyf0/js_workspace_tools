@@ -22,7 +22,7 @@ A collection of tools that are useful in a git-controlled monorepo that is manag
 - [x] export * from "./workspaces/findWorkspacePath";
 - [x] export * from "./workspaces/getWorkspaces";
 - [x] export * from "./workspaces/getWorkspaceRoot";
-- [ ] export * from "./workspaces/implementations/pnpm";
+- [x] export * from "./workspaces/implementations/pnpm";
 - [ ] export * from "./workspaces/implementations/rush";
 - [ ] export * from "./workspaces/implementations/yarn";
 - [ ] export * from "./workspaces/getChangedPackages";

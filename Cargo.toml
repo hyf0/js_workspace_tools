@@ -17,7 +17,7 @@ serde_yaml = "0.8.23"
 serde = { version = "1.0", features = ["derive"] }
 env_logger = "0.9"
 log = "0.4"
-lets_find_up = "*"
+lets_find_up = "0.0.1"
 # globby = { path= "../globby" }
 petgraph = "0.6.0"
 once_cell = "1.9.0"
