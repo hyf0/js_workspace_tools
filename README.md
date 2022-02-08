@@ -29,4 +29,6 @@ A collection of tools that are useful in a git-controlled monorepo that is manag
 - [ ] (Not goting to support this) export * from "./workspaces/listOfWorkspacePackageNames";
 - [x] export * from "./workspaces/workspaces";
 
+---
+
 Most functions are porting from [workspace-tools](https://github.com/microsoft/workspace-tools). Wonderful work of [kenotron](https://github.com/kenotron).
