@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use crate::{get_internal_deps, structs::package_info::{PackageInfo, PackageInfos}};
+use crate::{
+    get_internal_deps,
+    structs::package_info::{PackageInfo, PackageInfos}, PackageJsonMetadata,
+};
 
 mod get_transitive_consumers {
     use std::collections::HashMap;
@@ -25,8 +28,8 @@ mod get_transitive_consumers {
         .collect::<HashMap<_, _>>();
 
         let actual = get_transitive_consumers(&["c"], &all_packages);
-        assert!(actual.contains(&"a".to_string()));
-        assert!(actual.contains(&"b".to_string()));
+        assert!(actual.contains(&"a"));
+        assert!(actual.contains(&"b"));
     }
 
     #[test]
@@ -34,9 +37,9 @@ mod get_transitive_consumers {
         //             demo
         //            /    \
         //        grid      word
-        //            \      /  
+        //            \      /
         //            foo  bar
-        //              \  / 
+        //              \  /
         //              core
         let all_packages = vec![
             ("grid", stub_package("grid", &["foo"])),
@@ -53,11 +56,11 @@ mod get_transitive_consumers {
         let actual =
             get_transitive_consumers_with_scope(&["core"], &all_packages, &["grid", "word"]);
 
-        assert!(actual.contains(&"foo".to_string()));
-        assert!(actual.contains(&"bar".to_string()));
-        assert!(actual.contains(&"grid".to_string()));
-        assert!(actual.contains(&"word".to_string()));
-        assert!(!actual.contains(&"demo".to_string()));
+        assert!(actual.contains(&"foo"));
+        assert!(actual.contains(&"bar"));
+        assert!(actual.contains(&"grid"));
+        assert!(actual.contains(&"word"));
+        assert!(!actual.contains(&"demo"));
     }
 
     #[test]
@@ -84,14 +87,14 @@ mod get_transitive_consumers {
 
         let actual = get_transitive_consumers(&["c"], &all_packages);
 
-        assert!(actual.contains(&"a".to_string()));
-        assert!(actual.contains(&"b".to_string()));
-        assert!(actual.contains(&"g".to_string()));
+        assert!(actual.contains(&"a"));
+        assert!(actual.contains(&"b"));
+        assert!(actual.contains(&"g"));
 
-        assert!(!actual.contains(&"d".to_string()));
-        assert!(!actual.contains(&"e".to_string()));
-        assert!(!actual.contains(&"f".to_string()));
-        assert!(!actual.contains(&"c".to_string()));
+        assert!(!actual.contains(&"d"));
+        assert!(!actual.contains(&"e"));
+        assert!(!actual.contains(&"f"));
+        assert!(!actual.contains(&"c"));
     }
 }
 
@@ -170,29 +173,37 @@ mod get_transitive_providers {
 
         let actual = get_transitive_consumers_with_scope(&["f"], &all_packages, &["b"]);
 
-        assert!(actual.contains(&"e".to_string()));
-        assert!(actual.contains(&"c".to_string()));
-        assert!(actual.contains(&"b".to_string()));
+        assert!(actual.contains(&"e"));
+        assert!(actual.contains(&"c"));
+        assert!(actual.contains(&"b"));
 
-        assert!(!actual.contains(&"h".to_string()));
+        assert!(!actual.contains(&"h"));
     }
 }
 
 #[test]
 fn test_get_internal_deps() {
-  let info = stub_package("a", &["b", "c"]);
-  let packages = make_pkgs(vec![("a", &["b", "c"]), ("b", &["c"]), ("c", &[]), ("d", &[])]);
-  let deps = get_internal_deps(&info, &packages);
-  assert!(!deps.contains(&"a"));
-  assert!(deps.contains(&"b"));
-  assert!(deps.contains(&"c"));
-  assert!(!deps.contains(&"d"));
+    let info = stub_package("a", &["b", "c"]);
+    let packages = make_pkgs(vec![
+        ("a", &["b", "c"]),
+        ("b", &["c"]),
+        ("c", &[]),
+        ("d", &[]),
+    ]);
+    let deps = get_internal_deps(&info, &packages);
+    assert!(!deps.contains(&"a"));
+    assert!(deps.contains(&"b"));
+    assert!(deps.contains(&"c"));
+    assert!(!deps.contains(&"d"));
 }
 
 fn stub_package(name: &str, deps: &[&str]) -> PackageInfo {
     PackageInfo {
+        meta: PackageJsonMetadata {
+          filename: format!("packages/{}", name),
+          ..Default::default()
+        },
         name: name.to_string(),
-        __filename: format!("packages/{}", name),
         version: "1.0".to_string(),
         dependencies: deps
             .into_iter()

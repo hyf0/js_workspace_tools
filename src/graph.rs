@@ -1,6 +1,6 @@
 use crate::{get_internal_deps, structs::package_info::PackageInfos};
 
-/// edges of dependency(devDependency) => package
+/// edges of dependency/devDependency => package
 pub fn get_package_graph(pkgs: &PackageInfos) -> Vec<(&str, &str)> {
     let mut edges = vec![];
 

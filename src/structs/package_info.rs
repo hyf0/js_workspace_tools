@@ -1,11 +1,19 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
+
+#[derive(Debug, Default)]
+pub struct PackageJsonMetadata {
+    /// Represents the filename of the parsed `package.json`.
+    pub filename: String,
+    /// Original parsed content of `package.json` by `serde_json`
+    pub raw: serde_json::Value,
+}
 
 /// Parsed `package.json`
 #[derive(Debug, Default)]
 pub struct PackageInfo {
+    /// Some metadata about the parsed `package.json`. It's not exsited in [standards](https://docs.npmjs.com/cli/v8/configuring-npm/package-json).
+    pub meta: PackageJsonMetadata,
     pub name: String,
-    /// The `__filename` represents the filename of the package.json being parsed.
-    pub __filename: String,
     pub version: String,
     pub dependencies: HashMap<String, String>,
     pub dev_dependencies: HashMap<String, String>,
@@ -13,8 +21,6 @@ pub struct PackageInfo {
     pub private: Option<bool>,
     pub group: Option<String>,
     pub scripts: HashMap<String, String>,
-    /// Original Value of `package.json` being parsed by serde_json
-    pub __origin: serde_json::Value,
 }
 
 impl PackageInfo {
@@ -41,7 +47,6 @@ impl PackageInfo {
 
         Self {
             name: value.get("name").unwrap().as_str().unwrap().to_string(),
-            __filename: package_json_path,
             version: value.get("version").unwrap().as_str().unwrap().to_string(),
             dependencies,
             dev_dependencies,
@@ -49,8 +54,10 @@ impl PackageInfo {
             private: Default::default(),
             group: Default::default(),
             scripts,
-            __origin: value,
-            // package_json_path:
+            meta: PackageJsonMetadata {
+                filename: package_json_path,
+                raw: value,
+            },
         }
     }
 

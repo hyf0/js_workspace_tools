@@ -1,12 +1,13 @@
 use std::env::VarError;
 
+
+#[derive(Clone, Copy)]
 pub enum WorkspaceManager {
     Yarn,
     Pnpm,
     Rush,
     Npm,
     Lerna,
-    NotSurrported(String),
 }
 
 impl WorkspaceManager {
@@ -19,7 +20,7 @@ impl WorkspaceManager {
                     "rush" => WorkspaceManager::Rush,
                     "npm" => WorkspaceManager::Npm,
                     "lerna" => WorkspaceManager::Lerna,
-                    _ => WorkspaceManager::NotSurrported(preferred),
+                    _ => panic!("Not supported manager: {}", preferred),
                 };
                 clinet
             })

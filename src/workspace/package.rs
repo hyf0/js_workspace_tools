@@ -5,7 +5,7 @@ pub fn get_all_package_json_files(cwd: &str) -> Vec<String> {
     let workspaces = get_workspaces(&cwd);
     let package_json_files = workspaces
         .into_iter()
-        .map(|workspace| workspace.package_json.__filename)
+        .map(|workspace| workspace.package_json.meta.filename)
         .collect();
     package_json_files
 }
