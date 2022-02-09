@@ -4,7 +4,7 @@ A collection of tools that are useful in a git-controlled monorepo that is manag
 
 - [ ] lerna
 - [ ] npm workspaces
-- [ ] pnpm workspaces
+- [x] pnpm workspaces
 - [ ] rush
 - [ ] yarn workspaces
 
